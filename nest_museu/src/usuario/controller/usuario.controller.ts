@@ -1,8 +1,9 @@
-import { Controller, Delete, Get, HttpStatus, Param, Post, Put, Req } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Req } from '@nestjs/common';
 import { Request } from 'express';
 import { ResponseBuilder } from '../../commons/response/builder.response';
 import { UsuarioResponse } from '../dto/response/usuario.response';
 import { UsuarioService } from '../service/usuario.service';
+import { UsuarioRequest } from '../dto/request/usuario.request';
 
 @Controller(`usuario`)
 export class UsuarioController {
@@ -13,6 +14,7 @@ export class UsuarioController {
     return ResponseBuilder.status<UsuarioResponse>(HttpStatus.OK)
       .mensagem('Listagem de usuarios')
       .path(req.path)
+      .metodo(req.method)
       .dados(response)
       .build();
   }
@@ -20,20 +22,33 @@ export class UsuarioController {
   poId(@Param('id') id: number, @Req() req: Request) {
     const response = this.usuarioService.porId(id);
     return ResponseBuilder.status<UsuarioResponse>(HttpStatus.OK)
-      .mensagem('Listagem de usuarios')
+      .mensagem('Usuario localizado no sistema')
       .path(req.path)
+      .metodo(req.method)
       .dados(response)
       .build();
   }
 
   @Post()
-  salvar() {
-    return this.usuarioService.salvar();
+  salvar(@Body() usuarioRequest: UsuarioRequest, @Req() req: Request) {
+    const response = this.usuarioService.salvar(usuarioRequest);
+    return ResponseBuilder.status<UsuarioResponse>(HttpStatus.OK)
+      .mensagem('Usuario registrado com sucesso')
+      .path(req.path)
+      .metodo(req.method)
+      .dados(response)
+      .build();
   }
 
   @Put(':id')
-  update(@Param('id') id: number) {
-    return this.usuarioService.atualizar(id);
+  ataulizar(@Param('id') id: number, @Body() usuarioRequest: UsuarioRequest, @Req() req: Request) {
+    const response = this.usuarioService.atualizar(id, usuarioRequest);
+    return ResponseBuilder.status<UsuarioResponse>(HttpStatus.OK)
+      .mensagem('Usuario alterado com sucesso')
+      .path(req.path)
+      .metodo(req.method)
+      .dados(response)
+      .build();
   }
 
   @Delete(':id')

@@ -3,6 +3,7 @@ export interface ApiResponse<T> {
   timestamp: string;
   mensagem?: string | null;
   erro?: string;
-  path: string;
+  path?: string;
+  metodo?: string;
   dados?: T | T[] | null;
 }

@@ -20,6 +20,12 @@ export class ResponseBuilder<T> {
     this.response.path = path;
     return this;
   }
+
+  metodo(metodo: string): this {
+    this.response.metodo = metodo;
+    return this;
+  }
+
   dados(dados: T | T[] | null): this {
     this.response.dados = dados;
     return this;
